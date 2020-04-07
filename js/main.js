@@ -10,8 +10,9 @@ $(document).ready(function() {
         dataFromApi = response;
         console.log(dataFromApi); // debug
 
-        var arrayMonths = moment.months();
         var objToFill = {};
+        var objToFill2 = {};
+        var arrayMonths = moment.months();
         for (var i = 0; i < dataFromApi.length; i++) {
             var singleObj = dataFromApi[i];
             var date = singleObj.date;
@@ -22,21 +23,40 @@ $(document).ready(function() {
             }
             // console.log(objToFill); //debug
             objToFill[month] += singleObj.amount; // (now the key exists) and to its value we add that of the amount of the ith single object that we are cycling
+
+            var salesMan = singleObj.salesman;
+            if (objToFill2[salesMan] === undefined) { // in case the key doesn't exist
+                objToFill2[salesMan] = 0; //  then we create it and assign it the value 0
+            }
+            objToFill2[salesMan] += singleObj.amount; // (now the key exists) and to its value we add that of the amount of the ith single object that we are cycling
+
         }
         // console.log(objToFill); //debug
 
         var labelsMonths = [];
-        var dataAmount = [];
+        var dateAmount = [];
+
+        var labelsSalesMan = [];
+        var salesManAmount = [];
 
         for (var key in objToFill) { // cycle in the Intermediate object to take the keys and transform them into 'labels' and the values (of that key) to transform them into 'data'
             // console.log(key);
             labelsMonths.push(key);
-            dataAmount.push(objToFill[key]);
+            dateAmount.push(objToFill[key]);
         }
-        // console.log(labelsMonths);
-        // console.log(dataAmount);
 
-        var ctx = $('#sales-line-graph');
+        for (var key in objToFill2) { // cycle in the Intermediate object to take the keys and transform them into 'labels' and the values (of that key) to transform them into 'data'
+            // console.log(key);
+            labelsSalesMan.push(key);
+            salesManAmount.push(objToFill2[key]);
+        }
+        console.log(labelsMonths);
+        console.log(dateAmount);
+
+        console.log(labelsSalesMan);
+        console.log(salesManAmount);
+
+        var ctx = $('#sales-line-chart');
         var chart = new Chart(ctx, {
             // The type of chart we want to create
             type: 'line',
@@ -48,13 +68,27 @@ $(document).ready(function() {
                     label: 'Fatturato mensile',
                     backgroundColor: 'rgba(0, 68, 131, 0.5)',
                     borderColor: 'rgb(0, 68, 131)',
-                    data: dataAmount
+                    data: dateAmount
                 }]
             },
 
             // Configuration options go here
             options: {}
         });
+
+        var ctx2 = $('#sales-pie-chart');
+        var chart2 = new Chart(ctx2, {
+
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: salesManAmount,
+                backgroundColor: ["rgb(231, 150, 55)", "rgb(77, 227, 25)", "rgb(238, 236, 33)", "rgb(0, 68, 131)"]
+            }],
+
+            labels: labelsSalesMan
+        }
+    });
 
 
     });
