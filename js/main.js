@@ -48,8 +48,19 @@ $(document).ready(function() {
         for (var key in objToFill2) { // cycle in the Intermediate object to take the keys and transform them into 'labels' and the values (of that key) to transform them into 'data'
             // console.log(key);
             labelsSalesMan.push(key);
-            salesManAmount.push(objToFill2[key]);
+            salesManAmount.push((objToFill2[key]));
         }
+
+        var salesTotal = arraySum(salesManAmount);
+        // console.log(salesTotal);
+
+        for (var i = 0; i < salesManAmount.length; i++) {
+            salesManAmount[i] = Math.round(((salesManAmount[i]/salesTotal)*100), -1);
+            // console.log(salesManAmount[i]);
+        }
+
+
+
         console.log(labelsMonths);
         console.log(dateAmount);
 
@@ -93,6 +104,9 @@ $(document).ready(function() {
 
     });
 
-
-
+    function arraySum(array){
+        return array.reduce(function(a,b){
+            return a + b
+        }, 0);
+    };
 });
