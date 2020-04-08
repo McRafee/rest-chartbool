@@ -60,15 +60,16 @@ $(document).ready(function() {
                 labels: arrayMonths,
                 datasets: [{
                     label: 'Fatturato mensile',
-                    pointRadius: "0",
-                    pointStyle: "circle",
                     backgroundColor: 'rgba(0, 0, 0, 0.0)',
                     borderColor: 'rgb(0, 68, 131)',
+                    pointRadius: "0",
                     lineTension: '0',
                     data: dateAmount
                 }]
             },
-            options: {} // Configuration options go here
+            options: {
+
+            } // Configuration options go here
         });
 
         var ctx2 = $('#sales-pie-chart');
