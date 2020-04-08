@@ -1,8 +1,16 @@
 $(document).ready(function() {
     dashboard();
 
+$("#insert-sale").click(function(){
 
+    var salesman = $("#vendor-select option:selected").text();
+    var amount = $("#quantity").val();
+    var date = $("#day-of-sale").val();
+    alert(salesman + amount + date);
+});
     // *** FUNCTIONS ***
+
+
     function dashboard() {
         var apiSettings = {
             "url": "http://157.230.17.132:4030/sales",

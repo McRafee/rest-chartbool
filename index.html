@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <h2>La dashboard della <span>ACME inc</span></h2>
+    <h2><span>CHARTBool</span> la dashboard preferita dai rettiliani</h2>
     <main>
         <div class="container">
             <h4>Fatturato mensile</h4>
@@ -32,16 +32,15 @@
         </div>
         <div class="container">
             <h4>Inserimento dati di vendita</h4>
-            <p>Seleziona un venditore, inserisci la data di vendita e poi il valore in €</p>
-            <form class="" action="index.html" method="post">
-                <label>Venditore</label>
+            <p>Seleziona un venditore (1), inserisci la data di vendita (2) e poi il valore della vendita (3).</p>
+            <form>
+                <label>1 - Scegli il venditore:</label>
                 <select id="vendor-select"></select>
-                <label>Data di vendita:</label>
+                <label>2 - Selezione la data di vendita:</label>
                 <input type="date" id="day-of-sale" name="day-of-sale" min="2017-01-01" max="2017-12-31" value="2017-01-01">
-                <label>Valore:</label>
+                <label>3 - Inserisci il valore della vendita</label>
                 <input type="number" id="quantity" name="quantity" min="1" max="100000">
-                <input type="submit" value="Submit">
-
+                <input id="insert-sale" type="submit" value="Inserisci la vendita">
             </form>
 
         </div>

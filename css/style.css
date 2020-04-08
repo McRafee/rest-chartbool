@@ -1,7 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  container-sizing: border-container;
 }
 
 body {
@@ -34,13 +34,13 @@ main {
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 38%;
+    width: 40%;
     margin: 15px;
     padding: 15px;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.9);
     overflow: hidden;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    container-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .container h4 {
@@ -53,4 +53,43 @@ main {
 .container p {
     color: rgba(0, 0, 0, 0.6);
     text-align: justify;
+    padding: 10px;
+}
+
+label {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+input[type=date],
+input[type="number"],
+select
+ {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 100%;
+  background-color: #007ED6;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+div {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
 }
