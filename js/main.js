@@ -7,7 +7,8 @@ $(document).ready(function() {
         var date = moment($("#day-of-sale").val(), "YYYY-MM-DD").format("DD/MM/YYYY");
         if ((salesMan != "") && (amount != "") && (date != "Invalid date")) {
             sellPost(salesMan, amount, date);
-            setTimeout(function(){ dashboard();}, 1000);
+            // setTimeout(function(){ dashboard();}, 500);
+            setTimeout(function(){ location.reload();}, 500);
         } else {
             alert("error");
         }
@@ -78,9 +79,9 @@ $(document).ready(function() {
                 quarterAmount.push(objBarChart[key]);
             }
 
-            var newLineChart = lineChart($('#sales-line-chart'), arrayMonths, 'Fatturato mensile (€)', '#007ED6', '0', dateAmount);
-            var newPieChart = pieChart($('#sales-pie-chart'), salesManAmount, ["#52D726", "#007ED6", "#FF7300", "#FF0000"], labelsSalesMan);
-            var newBarChart = barChart($('#sales-bar-chart'), ["Q1", "Q2", "Q3", "Q4"], 'Fatturato per Quarter (€)', '#007ED6', '#007ED6', quarterAmount);
+            lineChart($('#sales-line-chart'), arrayMonths, 'Fatturato mensile (€)', '#007ED6', '0', dateAmount);
+            pieChart($('#sales-pie-chart'), salesManAmount, ["#52D726", "#007ED6", "#FF7300", "#FF0000"], labelsSalesMan);
+            barChart($('#sales-bar-chart'), ["Q1", "Q2", "Q3", "Q4"], 'Fatturato per Quarter (€)', '#007ED6', '#007ED6', quarterAmount);
 
             $.each(labelsSalesMan, function(index, value) {
                 $('#vendor-select')
@@ -117,7 +118,7 @@ $(document).ready(function() {
     };
 
     function lineChart(canvas, labels, label, borderColor, lineTension, data) {
-        new Chart($(canvas), {
+        var newlineChart = new Chart($(canvas), {
             type: 'line', // The type of chart we want to create
             data: { // The data for our dataset
                 labels: labels,
@@ -132,11 +133,10 @@ $(document).ready(function() {
 
             } // Configuration options go here
         });
-        return Chart
     };
 
     function pieChart(canvas, data, backgroundColor, labels) {
-        new Chart(canvas, {
+        var newPieChart = new Chart(canvas, {
             type: 'pie',
             data: {
                 datasets: [{
@@ -147,11 +147,10 @@ $(document).ready(function() {
                 labels: labels
             }
         });
-        return Chart
     };
 
     function barChart(canvas, labels, label, backgroundColor, borderColor, data) {
-        new Chart(canvas, {
+        var newBarChart = new Chart(canvas, {
             type: 'bar', // The type of chart we want to create
             data: { // The data for our dataset
                 labels: labels,
@@ -166,7 +165,6 @@ $(document).ready(function() {
 
             } // Configuration options go here
         });
-        return Chart
     };
 
 });
