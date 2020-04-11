@@ -33,15 +33,18 @@
         <div class="container">
             <h4>Inserimento dati di vendita</h4>
             <p>Seleziona un venditore (1), inserisci la data di vendita (2) e poi il valore della vendita (3).</p>
-            <form>
+
+            <div>
                 <label>1 - Scegli il venditore:</label>
-                <select id="vendor-select"></select>
+                <select id="vendor-select">
+                    <option value="">Scegli un venditore</option>
+                </select>
                 <label>2 - Selezione la data di vendita:</label>
                 <input type="date" id="day-of-sale" name="day-of-sale" min="2017-01-01" max="2017-12-31" value="2017-01-01">
                 <label>3 - Inserisci il valore della vendita</label>
                 <input type="number" id="quantity" name="quantity" min="1" max="100000">
                 <input id="insert-sale" type="submit" value="Inserisci la vendita">
-            </form>
+            </div>
 
         </div>
     </main>

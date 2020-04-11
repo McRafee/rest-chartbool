@@ -1,13 +1,17 @@
 $(document).ready(function() {
     dashboard();
 
-$("#insert-sale").click(function(){
-
-    var salesman = $("#vendor-select option:selected").text();
-    var amount = $("#quantity").val();
-    var date = $("#day-of-sale").val();
-    alert(salesman + amount + date);
-});
+    $("#insert-sale").click(function() {
+        var salesMan = $("#vendor-select option:selected").val();
+        var amount = parseInt($("#quantity").val());
+        var date = moment($("#day-of-sale").val(), "YYYY-MM-DD").format("DD/MM/YYYY");
+        if ((salesMan != "") && (amount != "") && (date != "Invalid date")) {
+            sellPost(salesMan, amount, date);
+            setTimeout(function(){ dashboard();}, 1000);
+        } else {
+            alert("error");
+        }
+    });
     // *** FUNCTIONS ***
 
 
@@ -19,7 +23,6 @@ $("#insert-sale").click(function(){
 
         $.ajax(apiSettings).done(function(response) {
             var dataFromApi = response;
-            // console.log(dataFromApi); // debug
 
             var objLineChart = {};
             var objPieChart = {};
@@ -30,26 +33,22 @@ $("#insert-sale").click(function(){
                 var date = singleObj.date;
                 var month = moment(date, "DD/MM/YYYY").get("M");
                 var quarter = moment(date, "DD/MM/YYYY").quarter();
-                 // console.log(quarter); //debug
+
                 if (objLineChart[month] === undefined) { // in case the key doesn't exist
                     objLineChart[month] = 0; //  then we create it and assign it the value 0
                 }
-                // console.log(objLineChart); //debug
-                objLineChart[month] += singleObj.amount; // (now the key exists) and to its value we add that of the amount of the ith single object that we are cycling
+                objLineChart[month] += parseInt(singleObj.amount); // (now the key exists) and to its value we add that of the amount of the ith single object that we are cycling
 
                 var salesMan = singleObj.salesman;
                 if (objPieChart[salesMan] === undefined) { // in case the key doesn't exist
                     objPieChart[salesMan] = 0; //  then we create it and assign it the value 0
                 }
-                objPieChart[salesMan] += singleObj.amount; // (now the key exists) and to its value we add that of the amount of the ith single object that we are cycling
+                objPieChart[salesMan] += parseInt(singleObj.amount); // (now the key exists) and to its value we add that of the amount of the ith single object that we are cycling
 
                 if (objBarChart[quarter] === undefined) { // in case the key doesn't exist
                     objBarChart[quarter] = 0; //  then we create it and assign it the value 0
                 }
-
-                objBarChart[quarter] += singleObj.amount; // (now the key exists) and to its value we add that of the amount of the ith single object that we are cycling
-
-
+                objBarChart[quarter] += parseInt(singleObj.amount); // (now the key exists) and to its value we add that of the amount of the ith single object that we are cycling
             }
 
             var labelsMonths = [];
@@ -69,8 +68,7 @@ $("#insert-sale").click(function(){
             var salesTotal = arraySum(salesManAmount);
 
             for (var i = 0; i < salesManAmount.length; i++) {
-                // salesManAmount[i] = Math.round(((salesManAmount[i]/salesTotal)*100), -1);
-                salesManAmount[i] = ((salesManAmount[i]/salesTotal)*100).toFixed(2);
+                salesManAmount[i] = ((salesManAmount[i] / salesTotal) * 100).toFixed(2);
             }
 
             var labelsQuarters = [];
@@ -80,66 +78,95 @@ $("#insert-sale").click(function(){
                 quarterAmount.push(objBarChart[key]);
             }
 
-            var ctx = $('#sales-line-chart');
-            var chart = new Chart(ctx, {
-                type: 'line', // The type of chart we want to create
-                data: { // The data for our dataset
-                    labels: arrayMonths,
-                    datasets: [{
-                        label: 'Fatturato mensile (€)',
-                        borderColor: '#007ED6',
-                        lineTension: '0',
-                        data: dateAmount
-                    }]
-                },
-                options: {
-
-                } // Configuration options go here
-            });
+            var newLineChart = lineChart($('#sales-line-chart'), arrayMonths, 'Fatturato mensile (€)', '#007ED6', '0', dateAmount);
+            var newPieChart = pieChart($('#sales-pie-chart'), salesManAmount, ["#52D726", "#007ED6", "#FF7300", "#FF0000"], labelsSalesMan);
+            var newBarChart = barChart($('#sales-bar-chart'), ["Q1", "Q2", "Q3", "Q4"], 'Fatturato per Quarter (€)', '#007ED6', '#007ED6', quarterAmount);
 
             $.each(labelsSalesMan, function(index, value) {
                 $('#vendor-select')
-                .append($("<option></option>")
-                    .attr("value",value)
-                    .text(value));
-                });
-
-            var ctx2 = $('#sales-pie-chart');
-            var chart2 = new Chart(ctx2, {
-            type: 'pie',
-            data: {
-                datasets: [{
-                    data: salesManAmount,
-                    backgroundColor: ["#52D726", "#007ED6", "#FF7300", "#FF0000"]
-                }],
-
-                labels: labelsSalesMan
-            }
-            });
-
-            var ctx3 = $('#sales-bar-chart');
-            var chart3 = new Chart(ctx3, {
-                type: 'bar', // The type of chart we want to create
-                data: { // The data for our dataset
-                    labels: ["Q1","Q2","Q3","Q4"],
-                    datasets: [{
-                        label: 'Fatturato per Quarter (€)',
-                        backgroundColor: '#007ED6',
-                        borderColor: '#007ED6',
-                        data: quarterAmount
-                    }]
-                },
-                options: {
-
-                } // Configuration options go here
+                    .append($("<option></option>")
+                        .attr("value", value)
+                        .text(value));
             });
         });
+    };
 
-    }
-
-    function arraySum(array){
-        return array.reduce(function(a,b){
+    function arraySum(array) {
+        return array.reduce(function(a, b) {
             return a + b
         }, 0);
     };
+
+    function sellPost(salesMan, amount, date) {
+        var settings = {
+            "url": "http://157.230.17.132:4030/sales/",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+                salesman: salesMan,
+                amount: amount,
+                date: date
+            }),
+        };
+        $.ajax(settings).done(function(response) {
+            console.log(response);
+        });
+    };
+
+    function lineChart(canvas, labels, label, borderColor, lineTension, data) {
+        new Chart($(canvas), {
+            type: 'line', // The type of chart we want to create
+            data: { // The data for our dataset
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    borderColor: borderColor,
+                    lineTension: lineTension,
+                    data: data
+                }]
+            },
+            options: {
+
+            } // Configuration options go here
+        });
+        return Chart
+    };
+
+    function pieChart(canvas, data, backgroundColor, labels) {
+        new Chart(canvas, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColor
+                }],
+
+                labels: labels
+            }
+        });
+        return Chart
+    };
+
+    function barChart(canvas, labels, label, backgroundColor, borderColor, data) {
+        new Chart(canvas, {
+            type: 'bar', // The type of chart we want to create
+            data: { // The data for our dataset
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
+                    data: data
+                }]
+            },
+            options: {
+
+            } // Configuration options go here
+        });
+        return Chart
+    };
+
 });
