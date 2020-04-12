@@ -129,10 +129,11 @@ $(document).ready(function() {
                     data: data
                 }]
             },
-            options: {
+            options: { // Configuration options go here
 
-            } // Configuration options go here
+            }
         });
+        newlineChart.update();
     };
 
     function pieChart(canvas, data, backgroundColor, labels) {
@@ -147,6 +148,7 @@ $(document).ready(function() {
                 labels: labels
             }
         });
+        newPieChart.update();
     };
 
     function barChart(canvas, labels, label, backgroundColor, borderColor, data) {
@@ -165,6 +167,7 @@ $(document).ready(function() {
 
             } // Configuration options go here
         });
+        newBarChart.update();
     };
 
 });
