@@ -1,4 +1,8 @@
 $(document).ready(function() {
+    var newLineChart = {};
+    var newPieChart = {};
+    var newBarChart = {};
+
     dashboard();
 
     $("#insert-sale").click(function() {
@@ -7,15 +11,12 @@ $(document).ready(function() {
         var date = moment($("#day-of-sale").val(), "YYYY-MM-DD").format("DD/MM/YYYY");
         if ((salesMan != "") && (amount != "") && (date != "Invalid date")) {
             sellPost(salesMan, amount, date);
-            // setTimeout(function(){ dashboard();}, 500);
-            setTimeout(function(){ location.reload();}, 500);
         } else {
             alert("error");
         }
     });
+
     // *** FUNCTIONS ***
-
-
     function dashboard() {
         var apiSettings = {
             "url": "http://157.230.17.132:4030/sales",
@@ -113,61 +114,77 @@ $(document).ready(function() {
             }),
         };
         $.ajax(settings).done(function(response) {
-            console.log(response);
+            dashboard();
         });
     };
 
     function lineChart(canvas, labels, label, borderColor, lineTension, data) {
-        var newlineChart = new Chart($(canvas), {
-            type: 'line', // The type of chart we want to create
-            data: { // The data for our dataset
-                labels: labels,
-                datasets: [{
-                    label: label,
-                    borderColor: borderColor,
-                    lineTension: lineTension,
-                    data: data
-                }]
-            },
-            options: { // Configuration options go here
+        if ($.isEmptyObject(newLineChart)) {
+            newLineChart = new Chart($(canvas), {
+                type: 'line', // The type of chart we want to create
+                data: { // The data for our dataset
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        borderColor: borderColor,
+                        lineTension: lineTension,
+                        data: data
+                    }]
+                },
+                options: { // Configuration options go here
 
-            }
-        });
-        newlineChart.update();
+                }
+            });
+        } else {
+            newLineChart.data.labels = labels;
+            newLineChart.data.datasets[0].data = data;
+            newLineChart.update();
+        }
+
     };
 
     function pieChart(canvas, data, backgroundColor, labels) {
-        var newPieChart = new Chart(canvas, {
-            type: 'pie',
-            data: {
-                datasets: [{
-                    data: data,
-                    backgroundColor: backgroundColor
-                }],
+        if ($.isEmptyObject(newPieChart)) {
+            newPieChart = new Chart(canvas, {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColor
+                    }],
 
-                labels: labels
-            }
-        });
-        newPieChart.update();
+                    labels: labels
+                }
+            });
+        } else {
+            newPieChart.data.labels = labels;
+            newPieChart.data.datasets[0].data = data;
+            newPieChart.update();
+        }
     };
 
     function barChart(canvas, labels, label, backgroundColor, borderColor, data) {
-        var newBarChart = new Chart(canvas, {
-            type: 'bar', // The type of chart we want to create
-            data: { // The data for our dataset
-                labels: labels,
-                datasets: [{
-                    label: label,
-                    backgroundColor: backgroundColor,
-                    borderColor: borderColor,
-                    data: data
-                }]
-            },
-            options: {
+        if ($.isEmptyObject(newBarChart)) {
+            newBarChart = new Chart(canvas, {
+                type: 'bar', // The type of chart we want to create
+                data: { // The data for our dataset
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        backgroundColor: backgroundColor,
+                        borderColor: borderColor,
+                        data: data
+                    }]
+                },
+                options: {
 
-            } // Configuration options go here
-        });
-        newBarChart.update();
+                } // Configuration options go here
+            });
+        } else {
+            newBarChart.data.labels = labels;
+            newBarChart.data.datasets[0].data = data;
+            newBarChart.update();
+        }
     };
 
 });
